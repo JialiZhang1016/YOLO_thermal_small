@@ -65,7 +65,16 @@ To set up the project and prepare the data for training, follow these steps:
    cd Ultralytics
    ```
 2. **Create envirorment for this repo**
-   - Follow the [official guide](README_offical.md) to set up the environment.
+   - Follow the [official guide](https://docs.ultralytics.com/quickstart/) to set up the environment.
+   ```
+   # example for mac
+
+   python3 -m venv ultralytics_env
+   pip3 install -e .
+   pip3 install torch torchvision torchaudio
+   source ultralytics_env/bin/activate
+   # deactivate
+   ```
 3. **Data Preparation**
    - Ensure the FLIR thermal dataset is structured as shown above.
    - If needed, run [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) to convert the annotations if you are using the original COCO format.
