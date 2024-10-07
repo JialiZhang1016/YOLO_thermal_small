@@ -4,73 +4,47 @@ This repository is dedicated to real-time object detection using YOLO. We levera
 
 ## Project Overview
 
--**Framework**: YOLO by Ultralytics
-
--**Data Collection**: Drone footage utilizing both RGB and thermal cameras
-
--**Platform**: MacOS, Windows, Linux
-
--**Primary Objective**: Real-time detection of selected objects using a dual-camera setup on drones
+- **Framework**: YOLO by Ultralytics
+- **Data Collection**: Drone footage utilizing both RGB and thermal cameras
+- **Platform**: MacOS, Windows, Linux
+- **Primary Objective**: Real-time detection of selected objects using a dual-camera setup on drones
 
 ## Dataset
 
 The dataset used in this project is the **FLIR dataset** (please find it in Teams). It includes RGB images and two types of thermal images:
 
--**RGB images**
-
--**Thermal** (color format)
-
--**Thermal_gray16** (16-bit grayscale format)
+- **RGB images**
+- **Thermal** (color format)
+- **Thermal_gray16** (16-bit grayscale format)
 
 The dataset is organized into the following folder structure:
 
 ```
-
 ├── images
-
 │   ├── test
-
 │   ├── train
-
 │   └── val
-
 ├── labels
-
 │   ├── test
-
 │   ├── train
-
 │   └── val
-
 ├── test.txt
-
 ├── train.txt
-
 └── val.txt
-
 ```
 
 I have filtered the dataset to focus on 10 out of the original 15 classes, as listed below:
 
--`person`
-
--`bike`
-
--`car`
-
--`motor`
-
--`bus`
-
--`truck`
-
--`light`
-
--`hydrant`
-
--`sign`
-
--`other vehicle`
+- `person`
+- `bike`
+- `car`
+- `motor`
+- `bus`
+- `truck`
+- `light`
+- `hydrant`
+- `sign`
+- `other vehicle`
 
 These categories were chosen for their relevance to our detection tasks. Other classes were excluded due to limited data availability, which could negatively impact training and detection quality.
 
@@ -84,36 +58,24 @@ Additionally, a configuration file, [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR
 
 To set up the project and prepare the data for training, follow these steps:
 
-1.**Clone the Repository**
+1. **Clone the Repository**
 
-```bash
-
-git clone https://github.com/JialiZhang1016/Ultralytics.git
-
-cd Ultralytics
-
-```
-
-2.**Create envirorment for this repo**
-
-- Follow the [official guide](README_offical.md) to set up the environment.
-
-3.**Data Preparation**
-
-- Ensure the FLIR thermal dataset is structured as shown above.
-- If needed, run [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) to convert the annotations if you are using the original COCO format.
-
-5.**Configuration**
-
-- Edit the paths in the [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR_v2.yaml) file to match your dataset location.
-
-6.**Training**
-
+   ```bash
+   git clone https://github.com/JialiZhang1016/Ultralytics.git
+   cd Ultralytics
+   ```
+2. **Create envirorment for this repo**
+   - Follow the [official guide](README_offical.md) to set up the environment.
+3. **Data Preparation**
+   - Ensure the FLIR thermal dataset is structured as shown above.
+   - If needed, run [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) to convert the annotations if you are using the original COCO format.
+5. **Configuration**
+   - Edit the paths in the [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR_v2.yaml) file to match your dataset location.
+6. **Training**
     ```bash
-
-yolo train data=FLIR_v2.yaml
-
+    yolo train data=FLIR_v2.yaml
     ```
+    
 
 ## License
 
