@@ -61,11 +61,13 @@ To set up the project and prepare the data for training, follow these steps:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/JialiZhang1016/Ultralytics.git
-   cd Ultralytics
+   git clone https://github.com/JialiZhang1016/YOLO_thermal_small.git
+   cd YOLO_thermal_small
    ```
 2. **Create envirorment for this repo**
+
    - Follow the [official guide](https://docs.ultralytics.com/quickstart/) to set up the environment.
+
    ```
    # example for mac
 
@@ -76,15 +78,17 @@ To set up the project and prepare the data for training, follow these steps:
    # deactivate
    ```
 3. **Data Preparation**
+
    - Ensure the FLIR thermal dataset is structured as shown above.
    - If needed, run [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) to convert the annotations if you are using the original COCO format.
-5. **Configuration**
+4. **Configuration**
+
    - Edit the paths in the [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR_v2.yaml) file to match your dataset location.
-6. **Training**
-    ```bash
-    yolo train data=FLIR_v2.yaml
-    ```
-    
+5. **Training**
+
+   ```bash
+   yolo train data=FLIR_v2.yaml
+   ```
 
 ## License
 
