@@ -56,6 +56,8 @@ from .block import (
     RepVGGDW,
     ResNetLayer,
     SCDown,
+    C2f_ODConv,
+    Bottleneck_ODConv,
 )
 from .conv import (
     CBAM,
@@ -71,6 +73,7 @@ from .conv import (
     LightConv,
     RepConv,
     SpatialAttention,
+    ODConv2d_yolo,
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect, v10Detect
 from .transformer import (
@@ -85,6 +88,8 @@ from .transformer import (
     TransformerEncoderLayer,
     TransformerLayer,
 )
+
+from .ODConv import ODConv2d
 
 __all__ = (
     "Conv",
@@ -156,4 +161,8 @@ __all__ = (
     "C2fCIB",
     "Attention",
     "PSA",
+    "ODConv2d"
+    "ODConv2d_yolo",
+    "C2f_ODConv",
+    "Bottleneck_ODConv",
 )

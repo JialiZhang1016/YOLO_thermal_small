@@ -9,6 +9,12 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
+from ultralytics.nn.modules.Biformer import BiLevelRoutingAttention as Biformer
+
+from ultralytics.nn.modules.AFPN import Detect_AFPN
+
+from ultralytics.nn.modules.EfficientV2 import efficientvit_backbone_b0, efficientvit_backbone_b1, efficientvit_backbone_b2, efficientvit_backbone_b3
+
 from ultralytics.nn.modules import (
     AIFI,
     C1,
@@ -60,6 +66,9 @@ from ultralytics.nn.modules import (
     Segment,
     WorldDetect,
     v10Detect,
+    ODConv2d_yolo,
+    C2f_ODConv,
+    Bottleneck_ODConv,
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -256,7 +265,7 @@ class BaseModel(nn.Module):
         """
         self = super()._apply(fn)
         m = self.model[-1]  # Detect()
-        if isinstance(m, Detect):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
+        if isinstance(m, (Detect, Detect_AFPN)):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
             m.stride = fn(m.stride)
             m.anchors = fn(m.anchors)
             m.strides = fn(m.strides)
@@ -322,7 +331,7 @@ class DetectionModel(BaseModel):
 
         # Build strides
         m = self.model[-1]  # Detect()
-        if isinstance(m, Detect):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
+        if isinstance(m, (Detect, Detect_AFPN)):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
             s = 256  # 2x min stride
             m.inplace = self.inplace
 
@@ -330,11 +339,11 @@ class DetectionModel(BaseModel):
                 """Performs a forward pass through the model, handling different Detect subclass types accordingly."""
                 if self.end2end:
                     return self.forward(x)["one2many"]
-                return self.forward(x)[0] if isinstance(m, (Segment, Pose, OBB)) else self.forward(x)
+                return self.forward(x)[0] if isinstance(m, (Segment, Pose, OBB, Detect_AFPN)) else self.forward(x)
 
             m.stride = torch.tensor([s / x.shape[-2] for x in _forward(torch.zeros(1, ch, s, s))])  # forward
             self.stride = m.stride
-            m.bias_init()  # only run once
+            m.bias_init()  # only run once      
         else:
             self.stride = torch.Tensor([32])  # default stride for i.e. RTDETR
 
@@ -996,6 +1005,9 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             PSA,
             SCDown,
             C2fCIB,
+            ODConv2d_yolo,
+            C2f_ODConv,
+            Bottleneck_ODConv,
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
@@ -1041,7 +1053,11 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [ch[f]]
         elif m is Concat:
             c2 = sum(ch[x] for x in f)
-        elif m in {Detect, WorldDetect, Segment, Pose, OBB, ImagePoolingAttn, v10Detect}:
+        # elif m in {efficientvit_backbone_b0, efficientvit_backbone_b1, efficientvit_backbone_b2, efficientvit_backbone_b3}:
+        #     m = m()
+        #     c2 = m.width_list[-1]
+        #     backbone = True
+        elif m in {Detect, WorldDetect, Segment, Pose, OBB, ImagePoolingAttn, v10Detect, Detect_AFPN}:
             args.append([ch[x] for x in f])
             if m is Segment:
                 args[2] = make_divisible(min(args[2], max_channels) * width, 8)
@@ -1051,6 +1067,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             c2 = args[0]
             c1 = ch[f]
             args = [c1, c2, *args[1:]]
+        elif m is Biformer:
+            args = [ch[f], *args]
         elif m is CBFuse:
             c2 = ch[f[-1]]
         else:
@@ -1158,7 +1176,7 @@ def guess_model_task(model):
                 return "pose"
             elif isinstance(m, OBB):
                 return "obb"
-            elif isinstance(m, (Detect, WorldDetect, v10Detect)):
+            elif isinstance(m, (Detect, WorldDetect, v10Detect, Detect_AFPN)):
                 return "detect"
 
     # Guess from model filename

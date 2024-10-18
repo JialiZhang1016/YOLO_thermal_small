@@ -7,6 +7,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from .ODConv import ODConv2d
+
 __all__ = (
     "Conv",
     "Conv2",
@@ -21,6 +23,7 @@ __all__ = (
     "CBAM",
     "Concat",
     "RepConv",
+    "ODConv2d_yolo",
 )
 
 
@@ -330,3 +333,20 @@ class Concat(nn.Module):
     def forward(self, x):
         """Forward pass for the YOLOv8 mask Proto module."""
         return torch.cat(x, self.d)
+
+class ODConv2d_yolo(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=1, stride=1, groups=1, dilation=1):
+        super().__init__()
+        self.conv = Conv(in_channels, out_channels, k=1)
+        self.dcnv3 = ODConv2d(out_channels,out_channels, kernel_size=kernel_size, stride=stride, groups=groups,
+                                   dilation=dilation)
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.gelu = nn.GELU()
+ 
+    def forward(self, x):
+        x = self.conv(x)
+ 
+        x = self.dcnv3(x)
+ 
+        x = self.gelu(self.bn(x))
+        return x
