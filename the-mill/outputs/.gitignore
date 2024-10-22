@@ -1,0 +1,2 @@
+!*.pt
+!*/**/*.pt    # Include .pt files in any subdirectory
