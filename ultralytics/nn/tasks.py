@@ -1045,7 +1045,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
                 args[3] = True
         elif m is AIFI:
             args = [ch[f], *args]
-        elif m is {MobileNetV4ConvSmall, 
+        elif m in {MobileNetV4ConvSmall, 
                    MobileNetV4ConvMedium, 
                    MobileNetV4ConvLarge, 
                    MobileNetV4HybridMedium, 
@@ -1108,18 +1108,6 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
         else:
             ch.append(c2)
     return nn.Sequential(*layers), sorted(save)
-        # m_ = nn.Sequential(*(m(*args) for _ in range(n))) if n > 1 else m(*args)  # module
-        # t = str(m)[8:-2].replace("__main__.", "")  # module type
-        # m.np = sum(x.numel() for x in m_.parameters())  # number params
-        # m_.i, m_.f, m_.type = i, f, t  # attach index, 'from' index, type
-    #     if verbose:
-    #         LOGGER.info(f"{i:>3}{str(f):>20}{n_:>3}{m.np:10.0f}  {t:<45}{str(args):<30}")  # print
-    #     save.extend(x % i for x in ([f] if isinstance(f, int) else f) if x != -1)  # append to savelist
-    #     layers.append(m_)
-    #     if i == 0:
-    #         ch = []
-    #     ch.append(c2)
-    # return nn.Sequential(*layers), sorted(save)
 
 
 def yaml_model_load(path):
