@@ -1,0 +1,36 @@
+# FLIR dataset https://www.flir.com/oem/adas/adas-dataset-form/
+# Example usage: yolo train data=FLIR_v2.yaml
+
+# (ultra_env) captainzhang@Captains-MBP thermal % tree -L 2
+# .
+# ├── images
+# │   ├── test
+# │   ├── train
+# │   └── val
+# ├── labels
+# │   ├── test
+# │   ├── train
+# │   └── val
+# ├── test.txt
+# ├── train.txt
+# └── val.txt
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: /home/tsw96d/YOLOComparision/FLIR_v2_thermal/thermal # dataset root dir
+train: images/train # train images 
+val: images/val # val images 
+test: images/test # test images (optional)
+
+# ['person','bike','car','motor','bus','truck','light', 'hydrant','sign','other vehicle'] 
+# Classes
+names:
+  0: person, Count
+  1: bike, Count
+  2: car, Count
+  3: motor, Count
+  4: bus, Count
+  5: truck, Count
+  6: light, Count
+  7: hydrant, Count
+  8: sign, Count
+  9: other vehicle
