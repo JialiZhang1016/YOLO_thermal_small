@@ -65,15 +65,15 @@ def process_annotations(json_path, output_dir, selected_labels, type="train", wi
     print(f"Processing completed, processed {len(frames)} frames. Category statistics have been saved to {mapping_file}")
 
 # Usage example
-# type = "train"
-# json_path = "/Users/captainzhang/Documents/Research/datasets/FLIR_ADAS_v2/images_thermal_train/index.json"  # Path to your index.json file
-# output_dir = "/Users/captainzhang/Documents/Research/datasets/FLIR_YOLO/thermal/label/train"  # Directory for output labels
-# selected_labels = ['person','bike','car','motor','bus','truck','light', 'hydrant','sign','other vehicle']  # User-selected object categories
+type = "train"
+json_path = "/Users/captainzhang/Documents/Research/datasets/FLIR_ADAS_v2/images_thermal_train/index.json"  # Path to your index.json file
+output_dir = "/Users/captainzhang/Documents/Research/datasets/FLIR_YOLO_9/thermal/label/train"  # Directory for output labels
+selected_labels = ['person','bike','car','motor','bus','truck','light', 'hydrant','sign']  # User-selected object categories
 
 # Usage example
-type = "val"
-json_path = "/Users/captainzhang/Documents/Research/datasets/FLIR_ADAS_v2/images_thermal_val/index.json"  # Path to your index.json file
-output_dir = "/Users/captainzhang/Documents/Research/datasets/FLIR_YOLO/thermal/label/val"  # Directory for output labels
-selected_labels = ['person','bike','car','motor','bus','truck','light', 'hydrant','sign','other vehicle']  # User-selected object categories
+# type = "val"
+# json_path = "/Users/captainzhang/Documents/Research/datasets/FLIR_ADAS_v2/images_thermal_val/index.json"  # Path to your index.json file
+# output_dir = "/Users/captainzhang/Documents/Research/datasets/FLIR_YOLO_9/thermal/label/val"  # Directory for output labels
+# selected_labels = ['person','bike','car','motor','bus','truck','light', 'hydrant','sign']  # User-selected object categories
 
 process_annotations(json_path, output_dir, selected_labels, type)
