@@ -1,11 +1,8 @@
 from ultralytics import YOLO
 
 # Initialize your custom model
-model = YOLO("./ultralytics/cfg/models/v8/yolov8_MobileNetv4.yaml")
-# model = YOLO("./ultralytics/cfg/models/11/yolo11.yaml")
+model = YOLO("runs/detect/MobleNet4_slideloss/weights/best.pt")
 
-results = model.train(data="ultralytics/cfg/datasets/FLIR_v2.yaml", epochs=2, batch=32, project="../outputs/training", name = "MobleNet4") 
-
-# results = model.val(data="/home/tsw96d/YOLOComparision/FLIR_v2.yaml", epochs=200, batch=64, project="../outputs/validation", name = "MobleNet4")
+results = model.val(data="ultralytics/cfg/datasets/FLIR_v2_RGB_thermal.yaml", batch=128)
 
 # success = model.export(format="onnx")

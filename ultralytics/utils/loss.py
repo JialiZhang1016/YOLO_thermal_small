@@ -414,7 +414,7 @@ class v8DetectionLoss:
         "下面的代码注释掉就是正常的损失函数，如果不注释使用的就是使用对应的损失失函数"
         # self.bce = Focal_Loss(nn.BCEWithLogitsLoss(reduction='none')) # Focal
         # self.bce = Vari_focalLoss() # VFLoss
-        self.bce = SlideLoss(nn.BCEWithLogitsLoss(reduction='none')) # SlideLoss
+        # self.bce = SlideLoss(nn.BCEWithLogitsLoss(reduction='none')) # SlideLoss
         # self.bce = QualityfocalLoss()  # 目前仅持者目标检测需要注意！
 
         self.hyp = h
