@@ -378,6 +378,7 @@ def get_flops(model, imgsz=640):
     try:
         model = de_parallel(model)
         p = next(model.parameters())
+        stride = 640
         if not isinstance(imgsz, list):
             imgsz = [imgsz, imgsz]  # expand if int/float
         try:
