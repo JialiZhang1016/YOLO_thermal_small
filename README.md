@@ -1,99 +1,40 @@
-# Real-Time Object Detection with YOLO and Drones
+# MS-YOLO: Infrared Object Detection for Edge Deployment via MobileNetV4 and SlideLoss
 
-This repository is dedicated to real-time object detection using YOLO. We leverage the **Ultralytics** YOLO framework to build a detection system using data collected from drones equipped with **RGB** and **thermal cameras**. Our goal is to develop a reliable detection system that can operate in real-time.
+This repository contains the implementation of MS-YOLO, a lightweight object detection model optimized for infrared imaging and edge deployment. The model integrates MobileNetV4 backbone with a novel SlideLoss function to achieve efficient detection performance on resource-constrained devices.
 
-## Project Overview
+## Abstract
 
-- **Framework**: YOLO by Ultralytics
-- **Data Collection**: Drone footage utilizing both RGB and thermal cameras
-- **Platform**: MacOS, Windows, Linux
-- **Primary Objective**: Real-time detection of selected objects using a dual-camera setup on drones
+Infrared imaging has emerged as a robust solution for urban object detection under low-light and adverse weather conditions, offering significant advantages over traditional visible-light cameras. However, challenges such as class imbalance, thermal noise, and computational constraints can significantly hinder model performance in practical settings. To address these issues, we evaluate multiple YOLO variants on the FLIR ADAS V2 dataset, ultimately selecting YOLOv8 as our baseline due to its balanced accuracy and efficiency. Building on this foundation, we present MS-YOLO (**M**obileNetv4 and **S**lideLoss based on YOLO), which replaces YOLOv8's CSPDarknet backbone with the more efficient MobileNetV4, reducing computational overhead by **1.5%** while sustaining high accuracy. In addition, we introduce *SlideLoss*, a novel loss function that dynamically emphasizes under‑represented and occluded samples, boosting precision without sacrificing recall. Experiments on the FLIR ADAS V2 benchmark show that MS-YOLO attains competitive mAP and superior precision while operating at only **6.7 GFLOPs**. These results demonstrate that MS-YOLO effectively addresses the dual challenge of maintaining high detection quality while minimizing computational costs, making it well-suited for real‑time edge deployment in urban environments.
 
 ## Dataset
 
-The dataset used in this project is the **FLIR dataset** (please find it in Teams). It includes RGB images and two types of thermal images:
+The model is trained and evaluated on the **FLIR Thermal Dataset**, focusing on 9 object classes:
 
-- **RGB images**
-- **Thermal** (color format)
-- **Thermal_gray16** (16-bit grayscale format)
+<img src="readme_pic/class_freq.png" width="500" alt="Class Frequency Distribution">
 
-The dataset is organized into the following folder structure:
+## Model architecture
 
+<img src="readme_pic/MNv4_YOLO.png" width="500" alt="Network architecture of MS-YOLO">
+
+## Results
+
+MS-YOLO achieves competitive detection accuracy while maintaining efficiency suitable for edge deployment.
+
+<img src="readme_pic/comp_table.jpg" width="500" alt="Model Performance Comparison">
+
+## Citation
+
+```bibtex
+@article{zhang2025mnv4yolo,
+  title={MS-YOLO: Infrared Object Detection for Edge Deployment via MobileNetV4 and SlideLoss},
+  author={Zhang, Jiali and White, Tyler and Zhang, Haochen and Hu, Weihua and Wunsch, Donald C. II and Liu, Jingwei},
+  booktitle={International Joint Conference on Neural Networks (IJCNN)},
+  year={2025},
+  address={Rome, Italy},
+  month={June 30 - July 5}
+}
 ```
-├── images
-│   ├── test
-│   ├── train
-│   └── val
-├── labels
-│   ├── test
-│   ├── train
-│   └── val
-├── test.txt
-├── train.txt
-└── val.txt
-```
-
-I have filtered the dataset to focus on 10 out of the original 15 classes, as listed below:
-
-- `person`
-- `bike`
-- `car`
-- `motor`
-- `bus`
-- `truck`
-- `light`
-- `hydrant`
-- `sign`
-- `other vehicle`
-
-These categories were chosen for their relevance to our detection tasks. Other classes were excluded due to limited data availability, which could negatively impact training and detection quality.
-
-### Data Preprocessing
-
-To facilitate data conversion, I created a script named [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) that converts the FLIR dataset annotations to the YOLO format required by Ultralytics. The resulting structure aligns with YOLO requirements, and the labels are prepared for immediate use with the chosen categories.
-
-Additionally, a configuration file, [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR_v2.yaml), is included to utilize thermal data specifically. This file can be easily modified to adapt to RGB or other data sources as needed.
-
-## Getting Started
-
-To set up the project and prepare the data for training, follow these steps:
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/JialiZhang1016/YOLO_thermal_small.git
-   cd YOLO_thermal_small
-   ```
-2. **Create envirorment for this repo**
-
-   - Follow the [official guide](https://docs.ultralytics.com/quickstart/) to set up the environment.
-
-   ```
-   # example for mac
-
-   python3 -m venv ultralytics_env
-   pip3 install -e .
-   pip3 install torch torchvision torchaudio
-   source ultralytics_env/bin/activate
-   # deactivate
-   ```
-3. **Data Preparation**
-
-   - Ensure the FLIR thermal dataset is structured as shown above.
-   - If needed, run [coco2yolo.py](ultralytics/cfg/datasets/flir2yolo.py) to convert the annotations if you are using the original COCO format.
-4. **Configuration**
-
-   - Edit the paths in the [FLIR_v2.yaml](ultralytics/cfg/datasets/FLIR_v2.yaml) file to match your dataset location.
-5. **Training**
-
-   ```bash
-   yolo train data=FLIR_v2.yaml
-   ```
 
 ## License
 
 This project is licensed under the MIT License.
-
-## Acknowledgments
-
-Special thanks to Ultrilytics for their YOLO framework and the creators of the FLIR dataset for providing valuable data for object detection tasks.
